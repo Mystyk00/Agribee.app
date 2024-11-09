@@ -1,0 +1,150 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&family=Kufam:ital,wght@0,400..900;1,400..900&display=swap");
+
+html,
+body {
+  position: relative;
+}
+body {
+  font-family: Kufam, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+a {
+  text-decoration: none;
+}
+.img-container {
+  display: flex;
+  column-gap: 50px;
+}
+.img-1 {
+  rotate: (-45deg);
+}
+
+.img-2 {
+  rotate: (45deg);
+}
+.controls {
+  margin-top: 100px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  max-height: 50px;
+  align-items: center;
+}
+
+#locationInput {
+  margin-top: 100px;
+  padding: 10px;
+  font-size: 16px;
+  width: fit-content200;
+  position: relative;
+  top: -50px;
+}
+
+#divResult {
+  max-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  position: relative;
+  width: 110px;
+  height: 20px;
+  margin: 30px auto;
+}
+
+.dot {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: #ccc;
+  position: absolute;
+}
+
+.dot_1 {
+  animation: animateDot1 1.5s linear infinite;
+  left: 30px;
+  background: #428bca;
+}
+
+.dot_2 {
+  animation: animateDot2 1.5s linear infinite;
+  animation-delay: 0.5s;
+  left: 60px;
+}
+
+.dot_3 {
+  animation: animateDot3 1.5s linear infinite;
+  left: 30px;
+}
+
+.dot_4 {
+  animation: animateDot4 1.5s linear infinite;
+  animation-delay: 0.5s;
+  left: 60px;
+}
+
+@keyframes animateDot1 {
+  0% {
+    transform: rotate(0deg) translateX(-30px);
+  }
+  25% {
+    transform: rotate(180deg) translateX(-30px);
+  }
+  75% {
+    transform: rotate(180deg) translateX(-30px);
+  }
+  100% {
+    transform: rotate(360deg) translateX(-30px);
+  }
+}
+@keyframes animateDot2 {
+  0% {
+    transform: rotate(0deg) translateX(-30px);
+  }
+  25% {
+    transform: rotate(-180deg) translateX(-30px);
+  }
+  75% {
+    transform: rotate(-180deg) translateX(-30px);
+  }
+  100% {
+    transform: rotate(-360deg) translateX(-30px);
+  }
+}
+@keyframes animateDot3 {
+  0% {
+    transform: rotate(0deg) translateX(30px);
+  }
+  25% {
+    transform: rotate(180deg) translateX(30px);
+  }
+  75% {
+    transform: rotate(180deg) translateX(30px);
+  }
+  100% {
+    transform: rotate(360deg) translateX(30px);
+  }
+}
+@keyframes animateDot4 {
+  0% {
+    transform: rotate(0deg) translateX(30px);
+  }
+  25% {
+    transform: rotate(-180deg) translateX(30px);
+  }
+  75% {
+    transform: rotate(-180deg) translateX(30px);
+  }
+  100% {
+    transform: rotate(-360deg) translateX(30px);
+  }
+}

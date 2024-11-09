@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="../static/map.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="../static/app.js"></script>
+
+    <script type="text/javascript">
+      $(function () {
+        $("#btnResult").on("click", function (event) {
+          $("#btnResult").prop("disabled", true);
+
+          $("#divResult").html(loading);
+          $.ajax({
+            url: "/map_data",
+            data: {
+              location: $("#locationInput").val(),
+            },
+            success: function (result) {
+              $("#divResult").html(result);
+              $("#btnResult").prop("disabled", false);
+            },
+            error: function (request, status, error) {
+              $("#divResult").html("");
+              $("#btnResult").prop("disabled", false);
+            },
+          });
+        });
+      });
+    </script>
+
+    <title>AgriBee</title>
+  </head>
+
+  <body>
+    <div class="img-container">
+      <img class="img-1" src="../static/images/soty.svg" alt="" />
+      <img class="img-2" src="../static/images/soty.svg" alt="" />
+    </div>
+
+    <form class="controls">
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <input
+            type="text"
+            class="form-control mb-2"
+            id="locationInput"
+            name="locationInput"
+            placeholder="Enter langtitude, longtitude or city, country code"
+            style="min-width: 500px"
+          />
+        </div>
+
+        <div class="col-auto">
+          <button
+            type="button"
+            class="btn btn-outline-primary mb-2"
+            id="btnResult"
+          >
+            Get data
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="container" id="divResult"></div>
+  </body>
+</html>

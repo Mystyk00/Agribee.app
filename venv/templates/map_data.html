@@ -1,0 +1,16 @@
+{%if error%}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{error}}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+{%endif%} {% for table in tables %}
+<!-- <h2>{{ titles[loop.index0] }}</h2> -->
+<!-- Display each title above the table -->
+<div class="table table-hover table-sm lead">
+  {{ table|safe }}
+  <!-- Render the table HTML safely -->
+</div>
+{% endfor %}
