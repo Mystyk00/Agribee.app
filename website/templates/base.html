@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriBee</title>
+    <link rel="stylesheet" href="../static/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header>
+      <section id="home">
+        <img src="../static/images/head_image.png" alt="" class="head_img" />
+        <div class="navigation">
+          <div class="wrap-logo">
+            <img src="../static/images/Group 21.png" alt="" class="logo" />
+          </div>
+          <nav>
+            <a class="active" href="#home">WHAT WE DO</a>
+            <a href="#tnn">THE NEURAL NETWORKS</a>
+            <a href="#toc">TYPES OF CULTURE</a>
+            <a href="#au">ABOUT US</a>
+          </nav>
+        </div>
+        <div class="language-switcher">
+          <button id="language-btn" class="language-btn">
+            <img
+              src="../static/images/language.svg"
+              alt="Українська"
+              id="current-flag"
+            />
+          </button>
+          <div class="language-dropdown" id="language-dropdown">
+            <button class="language-option" data-lang="en">
+              <img src="../static/images/usa.png" alt="English" /> English
+            </button>
+            <button class="language-option" data-lang="uk">
+              <img src="../static/images/ua.png" alt="Українська" /> Українська
+            </button>
+          </div>
+        </div>
+        <div class="logo_title">
+          <img
+            src="../static/images/logo-header.svg"
+            alt=""
+            class="logo_img_title"
+          />
+        </div>
+
+        <div class="search-container">
+          <input
+            type="text"
+            placeholder="Enter a location"
+            class="search-input"
+          />
+          <button class="search-button">
+            <a href="./map"
+              ><img src="../static/images/search 1.svg" alt="Пошук"
+            /></a>
+          </button>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <div class="wwd_info">
+        <div class="flex_content_1">
+          <h1 class="wwd_head">WHAT WE DO</h1>
+          <img src="../static/images/soty.svg" alt="" />
+        </div>
+        <div class="wwd_items">
+          <div class="wwd_text">
+            <p>
+              AgriBee is a platform that helps agricultural businesses
+              significantly increase their profits and utilize land to harvest
+              crops without depleting soil. AgriBee analyzes climate and soil
+              type, predicts wildfires and landslides, advises what is best to
+              plant in a given area, and with which other plants to alternate
+              cultivation so as not to deplete soil resources. By integrating
+              AI-driven insights, AgriBee empowers farmers to optimize yield
+              while preserving the environment for future generations.
+            </p>
+          </div>
+          <img src="../static/images/whatwedo.svg" alt="" />
+        </div>
+      </div>
+
+      <section id="tnn">
+        <div class="tnn_info">
+          <div class="flex_content">
+            <img src="../static/images/soty.svg" alt="" />
+            <h1 class="tnn_head">NEURAL NETWORKS</h1>
+          </div>
+          <div class="tnn_items">
+            <img
+              src="../static/images/wildfire.png"
+              alt=""
+              class="tnn_img tnn_img_1"
+            />
+            <div class="tnn_text">
+              <p class="p-2">
+                The neural network harnesses advanced deep learning techniques
+                to analyze satellite images and accurately detect wildfires.
+                Leveraging state-of-the-art convolutional layers and robust
+                optimization algorithms, it ensures precise identification even
+                in challenging scenarios. Designed to support early intervention
+                and disaster management, this model is a powerful tool for
+                safeguarding our planet against wildfire risks.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="wwd_info">
+        <div class="flex_content_1">
+          <img src="../static/images/soty.svg" alt="" />
+        </div>
+        <div class="wwd_items">
+          <div class="wwd1_text">
+            <p class="wwd1_text">
+              The neural network is a cutting-edge model designed to identify
+              landslides using satellite imagery. Utilizing a sophisticated
+              U-Net architecture, it delivers highly accurate segmentation
+              results, pinpointing areas affected by landslides with exceptional
+              precision. This powerful tool is invaluable for disaster response
+              and planning, helping communities mitigate risks and enhance
+              safety.
+            </p>
+          </div>
+          <img src="../static/images/landslide.png" alt="" class="tnn_img" />
+        </div>
+      </div>
+
+      <section id="toc">
+        <div>
+          <h1 class="toc_head">TYPES OF CULTURE</h1>
+          <swiper-container
+            class="mySwiper"
+            pagination="true"
+            effect="coverflow"
+            grab-cursor="true"
+            centered-slides="true"
+            slides-per-view="auto"
+            coverflow-effect-rotate="50"
+            coverflow-effect-stretch="0"
+            coverflow-effect-depth="100"
+            coverflow-effect-modifier="1"
+            coverflow-effect-slide-shadows="true"
+          >
+            <swiper-slide class="carousel-card">
+              <img src="../static/images/1.jpg" />
+              <div class="info-block">
+                <h3 class="info-title">Crops</h3>
+                <ul>
+                  <li>wheat</li>
+                  <li>rye</li>
+                  <li>barley</li>
+                  <li>oats</li>
+                  <li>millet</li>
+                  <li>corn</li>
+                </ul>
+              </div>
+            </swiper-slide>
+
+            <swiper-slide class="carousel-card">
+              <img src="../static/images/2.jpg" />
+              <div class="info-block">
+                <h3 class="info-title">Fruits</h3>
+                <ul>
+                  <li>apple</li>
+                  <li>pear</li>
+                  <li>cherry</li>
+                  <li>plum</li>
+                  <li>grape</li>
+                </ul>
+              </div>
+            </swiper-slide>
+
+            <swiper-slide class="carousel-card">
+              <img src="../static/images/3.jpg" />
+              <div class="info-block">
+                <h3 class="info-title">Vegetables</h3>
+                <ul>
+                  <li>potatoes</li>
+                  <li>cucumbers</li>
+                  <li>tomatoes</li>
+                  <li>cabbage</li>
+                  <li>carrots</li>
+                  <li>beets</li>
+                </ul>
+              </div>
+            </swiper-slide>
+
+            <swiper-slide class="carousel-card">
+              <img src="../static/images/4.jpg" />
+              <div class="info-block">
+                <h3 class="info-title">Oils</h3>
+                <ul>
+                  <li>flax</li>
+                  <li>sunflower</li>
+                  <li>mustard</li>
+                  <li>rapaseed</li>
+                </ul>
+              </div>
+            </swiper-slide>
+
+            <swiper-slide class="carousel-card">
+              <img src="../static/images/5.jpg" />
+              <div class="info-block">
+                <h3 class="info-title">Beans</h3>
+                <ul>
+                  <li>peas</li>
+                  <li>lentils</li>
+                  <li>beans</li>
+                  <li>soy</li>
+                </ul>
+              </div>
+            </swiper-slide>
+          </swiper-container>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <section id="au">
+        <div class="footer_block">
+          <h1 class="about_us_footer">ABOUT US</h1>
+          <div class="about_us">
+            We harness the power of artificial intelligence to create innovative
+            solutions for a connected and sustainable future. Contact us to find
+            out how our technologies can transform your industry. Let's shape
+            the future together! <br />
+            Contact us at: agribee.contact@gmail.com
+          </div>
+          <p class="pl">
+            © 2024 ArgiBee is founded by the Ukrainian student from the
+            Polytechnic Lyceum of Igor Sikorsky
+          </p>
+        </div>
+      </section>
+    </footer>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="../static/index.js"></script>
+  </body>
+</html>
