@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash
 from .copy import soil, get_top_plants_by_conditions_city, get_top_plants_by_prices, get_top_plants_by_conditions_coor
-import pandas as pd
+import polars as pl
 
 auth = Blueprint('auth', __name__)
 
@@ -17,13 +17,12 @@ def show_map_ajax():
 
 @auth.route('/map_data', methods=['GET'])
 def show_map_data():
-    df1 = pd.DataFrame()
-    df2 = pd.DataFrame()
+    df1 = pl.DataFrame()
+    df2 = pl.DataFrame()
     if True:
-        location = request.args.get('location');
+        location = request.args.get('location')
         api_key = "3870ece1b4577e1fa7ff617d9923e4d7"
         soil_type = soil()
-
 
         if not location:
             return render_template("map_data.html", error="Location input cannot be empty.")
@@ -44,8 +43,9 @@ def show_map_data():
             return render_template("map_data.html", error="Please enter a valid location as 'city, country' or 'lat, lon'")
         
     return render_template("map_data.html",
-                       tables=[df1.to_html(classes='data', index=False), df2.to_html(classes='data', index=False)],
-                       titles=[df1.columns.values, df2.columns.values])
+                       tables=[df1.to_pandas().to_html(classes='data', index=False), df2.to_pandas().to_html(classes='data', index=False)],
+                       titles=[df1.columns, df2.columns])
+
     
 # @auth.route('/map', methods=['GET', 'POST'])
 # def show_map():

@@ -1,9 +1,9 @@
 import requests
-import pandas as pd
+import polars as pl
 import random
 
-
 api_key = "3870ece1b4577e1fa7ff617d9923e4d7"
+
 # Helper Functions
 def get_coordinates(city_name, api_key):
     url = f"http://api.openweathermap.org/geo/1.0/direct?q={city_name}&limit=1&appid={api_key}"
@@ -34,7 +34,7 @@ def get_city_name(lat, lon, api_key):
             return "City not found"
     else:
         return f"Error: {response.status_code}"
-    
+
 def weather_city(city_name, api_key):
     lat, lon = get_coordinates(city_name, api_key)
     if lat is None or lon is None:
@@ -49,9 +49,9 @@ def weather_city(city_name, api_key):
             (forecast.get('main', {}).get('temp'), forecast.get('weather', [{}])[0].get('description'))
             for forecast in data.get('list', [])
         ]
+
+        forecast_df = pl.DataFrame(forecast_data, schema=['Temperature', 'Weather Description'])
         
-        # Calculate average temperature and precipitation
-        forecast_df = pd.DataFrame(forecast_data, columns=['Temperature', 'Weather Description'])
         precipitation_rates = {
             "light rain": 2.5,
             "moderate rain": 7.0,
@@ -61,9 +61,13 @@ def weather_city(city_name, api_key):
             "few clouds": 0.0,
             "scattered clouds": 0.0
         }
-        forecast_df["Precipitation"] = forecast_df["Weather Description"].map(precipitation_rates) * 365
+        
+        forecast_df = forecast_df.with_columns(
+            (pl.col("Weather Description").map_dict(precipitation_rates) * 365).alias("Precipitation")
+        )
         average_temperature = forecast_df["Temperature"].mean()
         average_precipitation = forecast_df["Precipitation"].mean()
+        
         print(average_temperature, average_precipitation)
         return average_temperature, average_precipitation
     else:
@@ -83,8 +87,7 @@ def weather_coor(lat, lon, api_key):
             for forecast in data.get('list', [])
         ]
         
-        # Calculate average temperature and precipitation
-        forecast_df = pd.DataFrame(forecast_data, columns=['Temperature', 'Weather Description'])
+        forecast_df = pl.DataFrame(forecast_data, schema=['Temperature', 'Weather Description'])
         precipitation_rates = {
             "light rain": 2.5,
             "moderate rain": 7.0,
@@ -94,22 +97,32 @@ def weather_coor(lat, lon, api_key):
             "few clouds": 0.0,
             "scattered clouds": 0.0
         }
-        forecast_df["Precipitation"] = forecast_df["Weather Description"].map(precipitation_rates) * 365
+        
+        forecast_df = forecast_df.with_columns(
+            (pl.col("Weather Description").map_dict(precipitation_rates) * 365).alias("Precipitation")
+        )
+        
         average_temperature = forecast_df["Temperature"].mean()
         average_precipitation = forecast_df["Precipitation"].mean()
+        
         print(average_temperature, average_precipitation)
         return average_temperature, average_precipitation
     else:
         return None, None
-
-
-def range_to_average(value):
-    if isinstance(value, str) and '-' in value:
-        a, b = map(float, value.split('-'))
-        return (a + b) / 2
-    return float(value)
-
-
+def range_to_average(df, column_name):
+    # Apply the transformation using Polars expressions
+    df = df.with_columns(
+        pl.when(pl.col(column_name).str.contains("-"))
+        .then(
+            pl.col(column_name)
+            .str.split("-")
+            .arr.eval((pl.element().cast(pl.Float64)), parallel=True)
+            .arr.mean()
+        )
+        .otherwise(pl.col(column_name).cast(pl.Float64))
+        .alias(column_name)
+    )
+    return df
 # Data Definitions
 price_data = {
     'Crop': ['Wheat', 'Rye', 'Corn', 'Barley', 'Sunflower', 'Soybean', 'Rapeseed', 'Oats', 'Millet', 'Apple Tree',
@@ -122,8 +135,9 @@ price_data = {
         8500, 6200, 7500, 8000, 10000, 12000, 11000, 9500, 8000, 8500, 13000, 14000, 11000]
 }
 
-price_df = pd.DataFrame(price_data)
+price_df = pl.DataFrame(price_data)
 
+# Soil Data
 # Soil Data
 chernozem_data = {
     "Plant": ["Wheat", "Corn", "Sunflower", "Beet", "Barley", "Rapeseed", "Cherry Tree", "Plum Tree", "Apricot Tree"],
@@ -173,61 +187,59 @@ chestnut_data = {
     "Potassium": ["0.03-0.05", "0.03-0.05", "0.05-0.07", "0.03-0.05", "0.05-0.07", "0.04-0.06", "0.03-0.05", "0.03-0.05"]
 }
 
-arr = ["Chernozem", "Loamy", "Sandy", "Chestnut"]
-def soil():
-    soil = arr[random.randint(0,3)]
-    return soil
-
-# Convert soil data to DataFrames
-soil_dfs = []
-for data in [chernozem_data, loamy_data, sandy_data, chestnut_data]:
-    df = pd.DataFrame(data)
-    for col in ["Temperature", "Humidity", "Precipitation", "Irrigation", "Nitrogen", "Phosphorus", "Potassium"]:
-        df[col] = df[col].apply(range_to_average)
-    soil_dfs.append(df)
-full_data = pd.concat(soil_dfs)
-
-
-# Define the desired column order
+# Desired column order
 columns_order = ["Plant", "Soil Type", "Temperature", "Humidity", "Precipitation", "Irrigation", "Nitrogen", "Phosphorus", "Potassium"]
+
+# Compiling all soil data into a single dictionary
+soil_data_dict = {
+    'Chernozem': chernozem_data,
+    'Loamy': loamy_data,
+    'Sandy': sandy_data,
+    'Chestnut': chestnut_data
+}
+
+# Create Polars DataFrames for each soil type and convert ranges to averages
+soil_dfs = []
+for soil_type, soil_data in soil_data_dict.items():
+    df = pl.DataFrame(soil_data)
+    for col in ["Temperature", "Humidity", "Precipitation", "Irrigation", "Nitrogen", "Phosphorus", "Potassium"]:
+        df = df.with_columns(pl.col(col).apply(range_to_average).alias(col))
+    soil_dfs.append(df)
+
+# Concatenate all data into a single DataFrame and reorder columns
+full_data = pl.concat(soil_dfs).select(columns_order)
+
 
 def get_top_plants_by_conditions_city(city_name, soil_type, api_key):
     average_temperature, average_precipitation = weather_city(city_name, api_key)
     if average_temperature is None or average_precipitation is None:
         return "City not found or API error."
 
-    filtered_df = full_data[full_data["Soil Type"] == soil_type]
-    filtered_df.loc[:, "Temperature"] = pd.to_numeric(filtered_df["Temperature"], errors="coerce")
-    filtered_df.loc[:, "Precipitation"] = pd.to_numeric(filtered_df["Precipitation"], errors="coerce")
-    filtered_df["Temperature Difference"] = abs(filtered_df["Temperature"] - average_temperature)
-    filtered_df["Precipitation Difference"] = abs(filtered_df["Precipitation"] - average_precipitation)
-    top_3_plants = filtered_df.sort_values(by=["Temperature Difference", "Precipitation Difference"]).head(3)
-
-    # Ensure the output has consistent columns
-    return top_3_plants[columns_order].reset_index(drop=True)
-
+    filtered_df = full_data.filter(pl.col("Soil Type") == soil_type)
+    filtered_df = filtered_df.with_columns([
+        abs(pl.col("Temperature") - average_temperature).alias("Temperature Difference"),
+        abs(pl.col("Precipitation") - average_precipitation).alias("Precipitation Difference")
+    ])
+    
+    top_3_plants = filtered_df.sort(["Temperature Difference", "Precipitation Difference"]).head(3)
+    return top_3_plants.select(columns_order)
 
 def get_top_plants_by_conditions_coor(lat, lon, soil_type, api_key):
     average_temperature, average_precipitation = weather_coor(lat, lon, api_key)
     if average_temperature is None or average_precipitation is None:
         return "City not found or API error."
 
-    filtered_df = full_data[full_data["Soil Type"] == soil_type]
-    filtered_df.loc[:, "Temperature"] = pd.to_numeric(filtered_df["Temperature"], errors="coerce")
-    filtered_df.loc[:, "Precipitation"] = pd.to_numeric(filtered_df["Precipitation"], errors="coerce")
-    filtered_df["Temperature Difference"] = abs(filtered_df["Temperature"] - average_temperature)
-    filtered_df["Precipitation Difference"] = abs(filtered_df["Precipitation"] - average_precipitation)
-    top_3_plants = filtered_df.sort_values(by=["Temperature Difference", "Precipitation Difference"]).head(3)
-
-    # Ensure the output has consistent columns
-    return top_3_plants[columns_order].reset_index(drop=True)
-
+    filtered_df = full_data.filter(pl.col("Soil Type") == soil_type)
+    filtered_df = filtered_df.with_columns([
+        abs(pl.col("Temperature") - average_temperature).alias("Temperature Difference"),
+        abs(pl.col("Precipitation") - average_precipitation).alias("Precipitation Difference")
+    ])
+    
+    top_3_plants = filtered_df.sort(["Temperature Difference", "Precipitation Difference"]).head(3)
+    return top_3_plants.select(columns_order)
 
 def get_top_plants_by_prices(soil_type):
-    filtered_df = full_data[full_data["Soil Type"] == soil_type]
-    merged_data = filtered_df.merge(price_df, left_on="Plant", right_on="Crop", how="inner")
-    sorted_plants = merged_data.sort_values(by=["Soil Type", "Price (UAH/t)"], ascending=[True, False])
-    top_3_plants = sorted_plants.head(3)
-
-    # Ensure the output has consistent columns, including "Price (UAH/t)" if needed
-    return top_3_plants[columns_order + ["Price (UAH/t)"]].reset_index(drop=True)
+    filtered_df = full_data.filter(pl.col("Soil Type") == soil_type)
+    merged_data = filtered_df.join(price_df, left_on="Plant", right_on="Crop", how="inner")
+    top_3_plants = merged_data.sort(by=["Soil Type", "Price (UAH/t)"], reverse=[False, True]).head(3)
+    return top_3_plants.select(columns_order + ["Price (UAH/t)"])
