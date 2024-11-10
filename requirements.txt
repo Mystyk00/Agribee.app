@@ -3,9 +3,7 @@ Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.2
 opencv-python==4.10.0.84 
-pandas==2.0.3
 requests==2.31.0
 SQLAlchemy==2.0.36
 Werkzeug==3.0.0
 WTForms==3.2.1
-yarl==1.9.2
